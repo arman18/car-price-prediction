@@ -16,15 +16,21 @@ data = pd.read_csv('data/original_garibazar_dataset.csv')
 
 '''
 # price processing
-
-for idx in range(len(data['price'])):
-    price = data['price'][idx]
+col = 'price'
+for idx in range(len(data[col])):
+    price = data[col][idx]
     if type(price) != str:
-        data['price'][idx] = -1
+        data[col][idx] = -1
         continue
     value = ''.join(i for i in price if i.isdigit())
-    data['price'][idx] = int(value)
+    data[col][idx] = int(value)
 
 data = data[data['price']!=-1]
+data = data.reset_index(drop=True)
 
-# Milage processing
+# Color processing
+data2 = data
+col = 'Color'
+for idx in range(len(data[col])):
+    data[col][idx] = data[col][idx][5:]
+
