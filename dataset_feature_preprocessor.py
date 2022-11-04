@@ -90,3 +90,23 @@ for col in arr:
         if value == -1: continue
         nvalue = ''.join(i for i in value if i.isdigit())
         data[col][idx] = int(nvalue)
+        
+# created date
+dates = {"January":'01','February':'02','March':'03','April':'04','May':'05','June':'06','July':'07','August':'08',
+         'September':'09','October':'10','November':'11','December':'12'}
+col = 'Created_date'
+flag = False
+for idx in range(len(data[col])):
+    # print(idx,data[col][idx])
+    if str(data[col][idx]) == 'nan':
+        data[col][idx]= -1
+        continue
+    date = data[col][idx].split(" ")
+    
+    ndate=""
+    if date[0]=="December": flag = True
+    if flag== True and date[0]!='December':
+        ndate = date[1]+'-'+dates[date[0]]+'-2022'
+    else: ndate = date[1]+'-'+dates[date[0]]+'-2021'
+    data[col][idx] = ndate
+    
