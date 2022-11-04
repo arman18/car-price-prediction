@@ -7,14 +7,14 @@ Created on Fri Nov  4 15:16:13 2022
 
 import pandas as pd
 
-data = pd.read_csv('data/original_garibazar_dataset.csv')
-''' 
-['web-scraper-order', 'web-scraper-start-url', 'container',
-       'container-href', 'price', 'created_date', 'Phone', 'Engine', 'Gearbox',
-       'Mileage', 'Year', 'Color', 'Body_type', 'Fuel_type', 'Air_condition',
-       'Drive_type', 'Condition', 'Model', 'Location']
 
-'''
+
+data = pd.read_csv('data/original_garibazar_dataset.csv')
+
+def remove_missing_instances(data,col,value=-1):
+    data = data[data[col]!=value]
+    data = data.reset_index(drop=True)
+    return data
 
 def shift_right(data,idx):
     arr = ['Mileage','Year','Color','Body_type','Fuel_type','Air_condition','Drive_type','Condition']
@@ -44,11 +44,9 @@ def process_price(data):
             continue
         value = ''.join(i for i in price if i.isdigit())
         data[col][idx] = int(value)
-    
-    data = data[data[col]!=-1]
-    data = data.reset_index(drop=True)
-    return data
-    
+    return remove_missing_instances(data, col,-1)
+
+
 # 2 Price processing
 data = process_price(data)
 
@@ -84,8 +82,8 @@ for col in data:
         val = data[col][idx]
         if val == 'N/A': data[col][idx] = -1
         
-# Remove unit comma
-arr = ['Engine','Mileage']
+# Remove unit comma and make integer
+arr = ['Engine','Mileage','Year']
 for col in arr:
     for idx in range(len(data[col])):
         value = data[col][idx]
