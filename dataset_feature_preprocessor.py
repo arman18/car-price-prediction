@@ -44,7 +44,7 @@ def _process_price(data):
             continue
         value = ''.join(i for i in price if i.isdigit())
         data[col][idx] = int(value)
-    return remove_missing_instances(data, col,-1)
+    return _remove_missing_instances(data, col,-1)
 
 
 # 2 Price processing
