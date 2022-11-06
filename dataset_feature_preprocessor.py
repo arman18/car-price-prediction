@@ -126,9 +126,11 @@ def pre_process(data):
     _change_na(data)
     _remove_extra_string(data)
     _change_create_date(data)
-        
+    data = data.drop(['web-scraper-order', 'web-scraper-start-url', 'container','container-href'], axis=1)    
     return data
 
 if __name__ == '__main__':
     data = pd.read_csv('data/original_garibazar_dataset.csv')
     data = pre_process(data)
+    
+    
