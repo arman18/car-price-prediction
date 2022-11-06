@@ -113,6 +113,11 @@ def _change_create_date(data):
         else: ndate = date[1]+'-'+dates[date[0]]+'-2021'
         data[col][idx] = ndate
     
+def make_upper_case(data):
+    cols = ['Gearbox','Color','Body_type','Fuel_type','Air_condition','Drive_type','Condition','Model','Location']
+    for item in cols:
+        data[item] = data[item].str.upper()
+        
 def pre_process(data):
     
     _shift_data_right(data)
@@ -126,7 +131,8 @@ def pre_process(data):
     _change_na(data)
     _remove_extra_string(data)
     _change_create_date(data)
-    data = data.drop(['web-scraper-order', 'web-scraper-start-url', 'container','container-href'], axis=1)    
+    data = data.drop(['web-scraper-order', 'web-scraper-start-url', 'container','container-href'], axis=1)
+    make_upper_case(data)
     return data
 
 if __name__ == '__main__':

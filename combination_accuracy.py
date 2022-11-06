@@ -22,13 +22,16 @@ def combination(df,category,lastCol):
                 return (category, False)
 
 def get_trin_df(df,category):
+    orgdf = df
     for col in category:
         idx = category[col]
+        # print(category)
         idx -=1
         if idx < 0:
             df = df[df[col] !=-1]
             continue;
-        df = df[df[col] == df[col].unique()[idx]]
+        # print(col, df[col].unique(),idx)
+        df = df[df[col] == orgdf[col].unique()[idx]]
     return df
 
 def add_row_to_df(df,accdf,accuracy,category):
@@ -51,11 +54,13 @@ def create_empty_df(category):
         obj[col] = []
     return pd.DataFrame(obj)
 
+# data['Body_type'].unique()
+
 if __name__ == '__main__':
     
-    data = pd.read_csv('data/original_garibazar_dataset.csv')
+    # data = pd.read_csv('data/original_garibazar_dataset.csv')
     
-    data = pre_process(data)
+    # data = pre_process(data)
     
     df =data
     df = df.drop(['Created_date', 'Phone'],axis=1)
@@ -72,20 +77,22 @@ if __name__ == '__main__':
     # numeric = 'Engine'
     # --------------- end -----------------------------
     
-    onlycat = ["price",'Gearbox','Color','Body_type','Fuel_type','Air_condition','Drive_type','Condition','Model','Location']
-    category = {'Gearbox':0,'Color':0,'Body_type':0,'Fuel_type':0,'Air_condition':0,'Drive_type':0,'Condition':0,'Model':0,'Location':0}
+    onlycat = ["Price",'Gearbox','Color','Body_type','Fuel_type','Air_condition','Drive_type','Condition','Model','Location']
+    category = {'Gearbox':0,'Body_type':0,'Fuel_type':0,'Air_condition':0,'Drive_type':0,'Condition':0,'Model':0,'Location':0,'Color':0}
     accdf = create_empty_df(category)
     avail = True
     while avail:
+        # print(df['Body_type'].unique(),len(df['Body_type'].unique()))
         traindf = get_trin_df(df, category)
+        # print(df['Body_type'].unique(),len(df['Body_type'].unique()))
         X = traindf.drop(onlycat, axis=1)
-        y = traindf['price']
-        
-        X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2,random_state=10)
-        
-        lr = LinearRegression()
-        lr.fit(X_train,y_train)
-        score = lr.score(X_test,y_test)
-        accdf = add_row_to_df(df,accdf,score,category)
+        y = traindf['Price']
+        if len(X) > 100:
+            X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2,random_state=10)
+            
+            lr = LinearRegression()
+            lr.fit(X_train,y_train)
+            score = lr.score(X_test,y_test)
+            accdf = add_row_to_df(df,accdf,score,category)
         category,avail = combination(df,category,'Color')
         
