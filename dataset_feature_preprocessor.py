@@ -116,19 +116,24 @@ def make_upper_case(data):
         data[item] = data[item].str.upper()
 def fill_average(df):
     cols = ['Engine','Mileage','Year']
-    total = 0
-    cnt = 0
     for col in cols:
         for idx in range(len(df)):
             if df[col][idx]==-1:
-                continue
-            total += df[col][idx]
-            cnt+=1
-            
-        for idx in range(len(df)):
-            if df[col][idx]==-1:
-                df[col][idx] = int(total/cnt)
-
+                total = 0
+                cnt = 0
+                for i in range(idx+1,len(df)):
+                    if df[col][i] != -1:
+                        cnt+=1
+                        total += df[col][i]
+                    if cnt==15:
+                        df[col][idx] = int(total/cnt)
+                        break
+                if cnt!=15:
+                    for i in range(idx-15+cnt,idx):
+                        cnt+=1
+                        total += df[col][i]
+                    df[col][idx] = int(total/cnt)
+# data.head()
 def pre_process(data):
     
     _shift_data_right(data)
