@@ -8,9 +8,6 @@ Created on Fri Nov  4 15:16:13 2022
 import pandas as pd
 
 
-
-
-
 def _remove_missing_instances(data,col,value=-1):
     data = data[data[col]!=value]
     data = data.reset_index(drop=True)
@@ -117,7 +114,21 @@ def make_upper_case(data):
     cols = ['Gearbox','Color','Body_type','Fuel_type','Air_condition','Drive_type','Condition','Model','Location']
     for item in cols:
         data[item] = data[item].str.upper()
-        
+def fill_average(df):
+    cols = ['Engine','Mileage','Year']
+    total = 0
+    cnt = 0
+    for col in cols:
+        for idx in range(len(df)):
+            if df[col][idx]==-1:
+                continue
+            total += df[col][idx]
+            cnt+=1
+            
+        for idx in range(len(df)):
+            if df[col][idx]==-1:
+                df[col][idx] = int(total/cnt)
+
 def pre_process(data):
     
     _shift_data_right(data)
@@ -133,7 +144,11 @@ def pre_process(data):
     _change_create_date(data)
     data = data.drop(['web-scraper-order', 'web-scraper-start-url', 'container','container-href'], axis=1)
     make_upper_case(data)
+    fill_average(data)
+    
     return data
+
+# data.to_csv('preprocessed.csv',index=False)
 
 if __name__ == '__main__':
     data = pd.read_csv('data/original_garibazar_dataset.csv')
