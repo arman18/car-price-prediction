@@ -118,11 +118,11 @@ def fill_average(df):
     cols = ['Engine','Mileage','Year']
     for col in cols:
         for idx in range(len(df)):
-            if df[col][idx]==-1:
+            if df[col][idx]==-1 or df[col][idx]==0:
                 total = 0
                 cnt = 0
                 for i in range(idx+1,len(df)):
-                    if df[col][i] != -1:
+                    if df[col][i] > 0:
                         cnt+=1
                         total += df[col][i]
                     if cnt==15:
